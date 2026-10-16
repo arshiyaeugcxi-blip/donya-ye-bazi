@@ -4,192 +4,234 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>دنیای بازی 🎮</title>
+<title>دنیای بازی</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#090d1b;color:#f5f7ff;font-family:Tahoma,Arial}
-header{background:#121a30;padding:18px;position:sticky;top:0}
-.logo{color:#35e5ff;font-size:24px;font-weight:bold}
-nav{display:flex;flex-wrap:wrap;gap:15px;margin-top:15px}
-a{color:#35e5ff;text-decoration:none}
-main{max-width:950px;margin:auto;padding:20px}
-.hero,.card,.game{padding:22px;border:1px solid #293653;background:#131d34;border-radius:16px;margin-bottom:18px}
-.hero{background:linear-gradient(120deg,#292458,#123447)}
-h1{font-size:clamp(28px,5vw,42px)}
-h1 span,h2{color:#35e5ff}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-button{padding:12px 16px;border:0;border-radius:9px;background:#35e5ff;color:#091322;font-weight:bold;cursor:pointer;margin:4px}
-input,textarea,select{width:100%;padding:12px;margin:8px 0 14px;border:1px solid #354466;border-radius:8px;background:#090f20;color:white}
-textarea{min-height:100px}
-.game{display:none}
-.result{color:#35e5ff;min-height:25px;line-height:1.8}
-.stats{display:flex;gap:10px;flex-wrap:wrap}
-.stat{background:#202d49;padding:15px;border-radius:10px;flex:1;text-align:center}
-.stat strong{display:block;color:#35e5ff;font-size:25px}
-footer{text-align:center;color:#aab5ce;padding:25px}
+body {
+  margin: 0;
+  background: #1b1a23;
+  color: white;
+  font-family: Tahoma, sans-serif;
+}
+header {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  color: #36e8bf;
+}
+nav {
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #292733;
+}
+nav button { flex: 1; }
+main { padding: 15px 15px 90px; max-width: 700px; margin: auto; }
+.card {
+  background: #302e3b;
+  border: 1px solid #454151;
+  border-radius: 18px;
+  padding: 18px;
+  margin: 12px 0;
+}
+button {
+  background: #7554d7;
+  color: white;
+  border: 0;
+  border-radius: 12px;
+  padding: 12px;
+  margin: 5px 0;
+  cursor: pointer;
+}
+input, select, textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 10px;
+  background: #201f29;
+  color: white;
+  border: 1px solid #555;
+}
+.page { display: none; }
+.page.active { display: block; }
+.note { color: #36e8bf; line-height: 2; }
 </style>
 </head>
 <body>
 <header>
-<div class="logo">🎮 دنیای بازی</div>
-<nav>
-<a href="#home">خانه</a><a href="#games">بازی‌ها</a>
-<a href="#shop">فروشگاه</a><a href="#profile">پروفایل</a>
-<a href="#support">پشتیبانی</a>
-</nav>
+  <b>🎮 دنیای بازی</b>
+  <span>🪙 <span id="coins">500</span> سکه</span>
 </header>
+
 <main>
-<section class="hero" id="home">
-<h1>به <span>دنیای بازی</span> خوش اومدی!</h1>
-<p>بازی کن، امتیاز بگیر و رکورد خودت رو بساز.</p>
-<a href="#games"><button>شروع بازی 🕹️</button></a>
+<section id="home" class="page active">
+  <div class="card">
+    <h2>به دنیای بازی خوش آمدی!</h2>
+    <p>بازی کن و سکه جمع کن.</p>
+    <button onclick="play()">شروع بازی</button>
+    <p id="gameResult"></p>
+  </div>
 </section>
 
-<section id="games">
-<h2>🕹️ بازی‌ها</h2>
-<div class="grid">
-<div class="card"><h3>⚡ واکنش سریع</h3><p>وقتی دکمه سبز شد، کلیک کن.</p><button onclick="openGame('reaction')">بازی کن</button></div>
-<div class="card"><h3>🔢 حدس عدد</h3><p>عدد مخفی بین ۱ تا ۱۰۰ رو پیدا کن.</p><button onclick="openGame('guess')">بازی کن</button></div>
-<div class="card"><h3>✊ سنگ کاغذ قیچی</h3><p>با کامپیوتر رقابت کن.</p><button onclick="openGame('rps')">بازی کن</button></div>
-</div>
-<div class="game" id="reaction">
-<h3>⚡ واکنش سریع</h3><p>شروع کن و تا سبز شدن صبر کن.</p>
-<button onclick="startReaction()">شروع</button>
-<button id="hit" disabled onclick="hitReaction()">منتظر بمون...</button>
-<p class="result" id="reactionResult"></p>
-</div>
-<div class="game" id="guess">
-<h3>🔢 حدس عدد</h3>
-<input id="guessInput" type="number" min="1" max="100" placeholder="حدست رو وارد کن">
-<button onclick="guessNumber()">بررسی</button><button onclick="newNumber()">بازی جدید</button>
-<p class="result" id="guessResult"></p>
-</div>
-<div class="game" id="rps">
-<h3>✊ سنگ کاغذ قیچی</h3>
-<button onclick="playRPS('سنگ')">✊ سنگ</button>
-<button onclick="playRPS('کاغذ')">✋ کاغذ</button>
-<button onclick="playRPS('قیچی')">✌️ قیچی</button>
-<p class="result" id="rpsResult"></p>
-</div>
+<section id="shop" class="page">
+  <div class="card">
+    <h2>🛍️ فروشگاه جم</h2>
+    <p>۲۰۰ جم — ۲۰۰ سکه</p>
+    <button onclick="buy(200,200)">خرید ۲۰۰ جم</button>
+    <p>۵۰۰ جم — ۴۰۰ سکه</p>
+    <button onclick="buy(500,400)">خرید ۵۰۰ جم</button>
+    <p>۱۰۰۰ جم — ۷۰۰ سکه</p>
+    <button onclick="buy(1000,700)">خرید ۱۰۰۰ جم</button>
+    <p id="shopResult"></p>
+  </div>
 </section>
 
-<section id="shop">
-<h2>🛍️ فروشگاه</h2>
-<div class="card"><p>🪙 خرید ۵۰ سکه با ۲۰ امتیاز</p><button onclick="buyCoins()">خرید سکه</button><p>🎁 جایزه روزانه: ۵ سکه</p><button onclick="dailyReward()">دریافت جایزه</button></div>
+<section id="support" class="page">
+  <div class="card">
+    <h2>پروفایل کاربری</h2>
+    <input id="first" placeholder="نام (اجباری)">
+    <input id="last" placeholder="نام خانوادگی">
+    <input id="rubika" placeholder="آیدی روبیکا">
+    <button onclick="saveProfile()">ذخیره پروفایل</button>
+    <p id="profileResult"></p>
+  </div>
+  <div class="card">
+    <h2>تماس با تیم پشتیبانی</h2>
+    <select id="kind">
+      <option>خرید جم</option>
+      <option>مشکل بازی</option>
+      <option>مشکل سکه</option>
+      <option>مشکل حساب کاربری</option>
+      <option>سایر موارد</option>
+    </select>
+    <textarea id="details" placeholder="توضیحات درخواست"></textarea>
+    <button onclick="sendRequest()">ثبت درخواست</button>
+    <p id="requestResult"></p>
+  </div>
 </section>
 
-<section id="profile">
-<h2>👤 پروفایل</h2>
-<div class="card">
-<label for="playerName">نام بازیکن</label><input id="playerName" maxlength="24" placeholder="نامت رو بنویس">
-<button onclick="saveName()">ذخیره نام</button>
-<div class="stats">
-<div class="stat"><strong id="points">0</strong>امتیاز</div>
-<div class="stat"><strong id="coins">0</strong>سکه</div>
-<div class="stat"><strong id="wins">0</strong>برد</div>
-</div>
-</div>
-</section>
-
-<section id="support">
-<h2>🎧 پشتیبانی</h2>
-<div class="card">
-<label for="supportName">نام بازیکن</label><input id="supportName" placeholder="نام بازیکن">
-<label for="supportType">نوع درخواست</label>
-<select id="supportType"><option>سؤال</option><option>درخواست جم</option><option>گزارش مشکل</option></select>
-<label for="supportMessage">متن پیام</label><textarea id="supportMessage" placeholder="پیامت رو بنویس..."></textarea>
-<button onclick="sendSupport()">ثبت درخواست</button>
-<p class="result" id="supportResult"></p>
-</div>
-<div class="card">
-<h3>🔐 صندوق آزمایشی پشتیبانی</h3>
-<p>این بخش فقط پیام‌های همین مرورگر رو می‌خونه؛ رمز داخل کد عمومی است.</p>
-<input id="supportPassword" type="password" placeholder="رمز پشتیبانی">
-<button onclick="showInbox()">نمایش پیام‌ها</button>
-<div id="inbox"></div>
-</div>
+<section id="settings" class="page">
+  <div class="card">
+    <h2>⚙️ تنظیمات پروفایل</h2>
+    <p id="summary">پروفایل هنوز ذخیره نشده است.</p>
+    <button onclick="show('support')">ویرایش پروفایل</button>
+  </div>
+  <div class="card">
+    <h2>🔐 ورود پشتیبانی آزمایشی</h2>
+    <input id="password" type="password" placeholder="رمز پشتیبانی">
+    <button onclick="adminLogin()">ورود</button>
+    <p id="adminResult"></p>
+    <div id="inbox"></div>
+  </div>
 </section>
 </main>
-<footer>🎮 دنیای بازی — نسخه اول</footer>
+
+<nav>
+  <button onclick="show('home')">🏠 خانه</button>
+  <button onclick="show('shop')">🛍️ فروشگاه</button>
+  <button onclick="show('support')">☎️ پشتیبانی</button>
+  <button onclick="show('settings')">⚙️ تنظیمات</button>
+</nav>
 
 <script>
-const KEY='gw_profile', MSG='gw_messages';
-let data;
-try{data=JSON.parse(localStorage.getItem(KEY))||{name:'',points:0,coins:0,wins:0,day:''}}
-catch(e){data={name:'',points:0,coins:0,wins:0,day:''}}
+let coins = Number(localStorage.getItem('coins') || 500);
+let requests = JSON.parse(localStorage.getItem('requests') || '[]');
 
-function save(){localStorage.setItem(KEY,JSON.stringify(data));update()}
-function update(){
-document.getElementById('playerName').value=data.name;
-['points','coins','wins'].forEach(k=>document.getElementById(k).textContent=data[k]);
+function updateCoins() {
+  document.getElementById('coins').textContent = coins;
+  localStorage.setItem('coins', coins);
 }
-function reward(p,c,w){data.points+=p;data.coins+=c;if(w)data.wins++;save()}
-function saveName(){data.name=document.getElementById('playerName').value.trim();save();alert('نام ذخیره شد!')}
-function openGame(id){
-document.querySelectorAll('.game').forEach(e=>e.style.display='none');
-document.getElementById(id).style.display='block';
-document.getElementById(id).scrollIntoView({behavior:'smooth'});
+function show(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
-let timer,state='idle',startTime=0;
-function startReaction(){
-clearTimeout(timer);state='waiting';
-let b=document.getElementById('hit');b.disabled=true;b.style.background='#a33c50';b.textContent='صبر کن...';
-document.getElementById('reactionResult').textContent='آماده باش!';
-timer=setTimeout(()=>{state='ready';startTime=performance.now();b.disabled=false;b.style.background='#20d890';b.textContent='الان کلیک کن!'},1500+Math.random()*2500);
+function play() {
+  const answer = prompt('حاصل ۷ + ۵ چند می‌شود؟');
+  if (answer === null) return;
+  if (Number(answer) === 12) {
+    coins += 20;
+    updateCoins();
+    document.getElementById('gameResult').textContent =
+      'آفرین! ۲۰ سکه گرفتی 🎉';
+  } else {
+    document.getElementById('gameResult').textContent =
+      'جواب درست ۱۲ بود؛ دوباره تلاش کن!';
+  }
 }
-function hitReaction(){
-let b=document.getElementById('hit');
-if(state==='waiting'){clearTimeout(timer);state='idle';b.disabled=true;document.getElementById('reactionResult').textContent='زود زدی! دوباره امتحان کن.';return}
-if(state!=='ready')return;
-let ms=Math.round(performance.now()-startTime);state='idle';b.disabled=true;b.style.background='';b.textContent='تمام شد';
-document.getElementById('reactionResult').textContent='زمان واکنش: '+ms+' میلی‌ثانیه';
-reward(10,2,true);
+function saveProfile() {
+  const first = document.getElementById('first').value.trim();
+  if (!first) {
+    document.getElementById('profileResult').textContent =
+      'نام اجباری است.';
+    return;
+  }
+  localStorage.setItem('first', first);
+  localStorage.setItem('last', document.getElementById('last').value.trim());
+  localStorage.setItem('rubika', document.getElementById('rubika').value.trim());
+  document.getElementById('profileResult').textContent = 'پروفایل ذخیره شد.';
+  document.getElementById('summary').textContent =
+    first + ' ' + localStorage.getItem('last') +
+    ' — روبیکا: ' + (localStorage.getItem('rubika') || 'ثبت نشده');
 }
-let secret=Math.floor(Math.random()*100)+1,tries=0,finished=false;
-function newNumber(){secret=Math.floor(Math.random()*100)+1;tries=0;finished=false;document.getElementById('guessInput').value='';document.getElementById('guessResult').textContent='عدد جدید آماده است!'}
-function guessNumber(){
-if(finished)return;
-let n=Number(document.getElementById('guessInput').value);
-if(!Number.isInteger(n)||n<1||n>100){document.getElementById('guessResult').textContent='عدد بین ۱ تا ۱۰۰ وارد کن.';return}
-tries++;
-if(n===secret){finished=true;document.getElementById('guessResult').textContent='آفرین! ۱۵ امتیاز گرفتی.';reward(15,3,true)}
-else document.getElementById('guessResult').textContent=n<secret?'عدد بزرگ‌تره!':'عدد کوچک‌تره!';
+function buy(gems, cost) {
+  if (!localStorage.getItem('first')) {
+    document.getElementById('shopResult').textContent =
+      'ابتدا در بخش پشتیبانی پروفایلت را ذخیره کن.';
+    return;
+  }
+  if (coins < cost) {
+    document.getElementById('shopResult').textContent = 'سکه کافی نداری.';
+    return;
+  }
+  if (!confirm('خرید ' + gems + ' جم با ' + cost + ' سکه؟')) return;
+  coins -= cost;
+  updateCoins();
+  addRequest('خرید ' + gems + ' جم', 'هزینه: ' + cost + ' سکه');
+  document.getElementById('shopResult').textContent =
+    'درخواست شما به تیم پشتیبانی ارسال شد. جواب پیام در روبیکا به آیدی شما ارسال می‌شود. (در این نسخه فقط محلی ذخیره شده است.)';
 }
-function playRPS(player){
-let opts=['سنگ','کاغذ','قیچی'],cpu=opts[Math.floor(Math.random()*3)],msg;
-if(player===cpu)msg='مساوی شد!';
-else if((player==='سنگ'&&cpu==='قیچی')||(player==='کاغذ'&&cpu==='سنگ')||(player==='قیچی'&&cpu==='کاغذ')){msg='تو بردی! ۱۰ امتیاز گرفتی.';reward(10,2,true)}
-else msg='این بار کامپیوتر برد.';
-document.getElementById('rpsResult').textContent='تو: '+player+' | کامپیوتر: '+cpu+' — '+msg;
+function addRequest(kind, details) {
+  requests.push({
+    name: localStorage.getItem('first'),
+    last: localStorage.getItem('last') || '',
+    rubika: localStorage.getItem('rubika') || '',
+    kind, details, date: new Date().toLocaleString('fa-IR')
+  });
+  localStorage.setItem('requests', JSON.stringify(requests));
 }
-function buyCoins(){if(data.points<20){alert('به ۲۰ امتیاز نیاز داری.');return}data.points-=20;data.coins+=50;save();alert('۵۰ سکه گرفتی!')}
-function dailyReward(){
-let today=new Date().toLocaleDateString('en-CA');
-if(data.day===today){alert('جایزه امروز رو قبلاً گرفتی.');return}
-data.day=today;data.coins+=5;save();alert('۵ سکه گرفتی!');
+function sendRequest() {
+  if (!localStorage.getItem('first')) {
+    document.getElementById('requestResult').textContent =
+      'ابتدا پروفایل را ذخیره کن.';
+    return;
+  }
+  addRequest(document.getElementById('kind').value,
+             document.getElementById('details').value);
+  document.getElementById('requestResult').textContent =
+    'درخواست در این مرورگر ثبت شد؛ هنوز به تیم ارسال نشده است.';
 }
-function getMessages(){try{return JSON.parse(localStorage.getItem(MSG))||[]}catch(e){return []}}
-function sendSupport(){
-let name=document.getElementById('supportName').value.trim(),message=document.getElementById('supportMessage').value.trim(),type=document.getElementById('supportType').value;
-if(!name||!message){document.getElementById('supportResult').textContent='نام و پیام رو وارد کن.';return}
-let all=getMessages();all.push({name,message,type,date:new Date().toLocaleString('fa-IR')});
-localStorage.setItem(MSG,JSON.stringify(all));document.getElementById('supportMessage').value='';
-document.getElementById('supportResult').textContent='در همین مرورگر ثبت شد؛ هنوز برای مدیر سایت ارسال نشده.';
+function adminLogin() {
+  if (document.getElementById('password').value !== 'Arshiya1392') {
+    document.getElementById('adminResult').textContent = 'رمز اشتباه است.';
+    return;
+  }
+  document.getElementById('adminResult').textContent =
+    'ورود آزمایشی موفق بود. درخواست‌های همین مرورگر:';
+  document.getElementById('inbox').innerHTML = requests.map(r =>
+    '<div class="card"><b>' + safe(r.name) + ' ' + safe(r.last) +
+    '</b><p>روبیکا: ' + safe(r.rubika) +
+    '</p><p>نوع: ' + safe(r.kind) +
+    '</p><p>' + safe(r.details) + '</p></div>'
+  ).join('') || 'هنوز درخواستی ثبت نشده است.';
 }
-function showInbox(){
-if(document.getElementById('supportPassword').value!=='Arshiya1392'){alert('رمز اشتباه است.');return}
-let box=document.getElementById('inbox');box.replaceChildren();let all=getMessages();
-if(!all.length){box.textContent='پیامی ثبت نشده.';return}
-all.slice().reverse().forEach(m=>{
-let card=document.createElement('div');card.className='card';
-let title=document.createElement('strong');title.textContent=m.type+' — '+m.name;
-let body=document.createElement('p');body.textContent=m.message;
-let date=document.createElement('p');date.textContent=m.date;
-card.append(title,body,date);box.appendChild(card);
-});
+function safe(s) {
+  return String(s || '').replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-update();
+updateCoins();
 </script>
 </body>
-                                                                                                                                                                           </html>
-                                                                                                                                                                           
+</html>
+</html
